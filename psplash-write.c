@@ -19,34 +19,31 @@
 #include <errno.h>
 #include "psplash.h"
 
-int main(int argc, char **argv) 
+int main(int argc, char **argv)
 {
-  char *rundir;
-  int   pipe_fd;
+	char *rundir;
+	int pipe_fd;
 
-  rundir = getenv("PSPLASH_FIFO_DIR");
+	rundir = getenv("PSPLASH_FIFO_DIR");
 
-  if (!rundir)
-    rundir = "/run";
+	if (!rundir)
+		rundir = "/run";
 
-  if (argc!=2) 
-    {
-      fprintf(stderr, "Wrong number of arguments\n");
-      exit(-1);
-    }
-  
-  chdir(rundir);
-  
-  if ((pipe_fd = open (PSPLASH_FIFO,O_WRONLY|O_NONBLOCK)) == -1)
-    {
-      /* Silently error out instead of covering the boot process in 
-         errors when psplash has exitted due to a VC switch */
-      /* perror("Error unable to open fifo"); */
-      exit (-1);
-    }
+	if (argc != 2) {
+		fprintf(stderr, "Wrong number of arguments\n");
+		exit(-1);
+	}
 
-  write(pipe_fd, argv[1], strlen(argv[1])+1);
+	chdir(rundir);
 
-  return 0;
+	if ((pipe_fd = open(PSPLASH_FIFO, O_WRONLY | O_NONBLOCK)) == -1) {
+		/* Silently error out instead of covering the boot process in 
+		   errors when psplash has exitted due to a VC switch */
+		/* perror("Error unable to open fifo"); */
+		exit(-1);
+	}
+
+	write(pipe_fd, argv[1], strlen(argv[1]) + 1);
+
+	return 0;
 }
-
