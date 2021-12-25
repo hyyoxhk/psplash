@@ -33,7 +33,7 @@ int get_progress(void)
 	char buffer[20];
 	int len;
 
-        /* Connect to the system bus */
+	/* Connect to the system bus */
 	r = sd_bus_new(&bus);
 	if (r < 0)
 		goto finish;
@@ -44,19 +44,20 @@ int get_progress(void)
 
 	r = sd_bus_start(bus);
 	if (r < 0) {
-		fprintf(stderr, "Failed to connect to systemd private bus: %s\n", strerror(-r));
+		fprintf(stderr,
+			"Failed to connect to systemd private bus: %s\n",
+			strerror(-r));
 		goto finish;
-        }
+	}
 
-        /* Issue the method call and store the respons message in m */
-	r = sd_bus_get_property_trivial(bus,
-		"org.freedesktop.systemd1",           /* service to contact */
-		"/org/freedesktop/systemd1",          /* object path */
-		"org.freedesktop.systemd1.Manager",   /* interface name */
-		"Progress",                           /* method name */
-		&error,                               /* object to return error in */
-		'd',                                  /* return message on success */
-		&progress);                           /* value */
+	/* Issue the method call and store the respons message in m */
+	r = sd_bus_get_property_trivial(bus, "org.freedesktop.systemd1",	/* service to contact */
+					"/org/freedesktop/systemd1",	/* object path */
+					"org.freedesktop.systemd1.Manager",	/* interface name */
+					"Progress",	/* method name */
+					&error,	/* object to return error in */
+					'd',	/* return message on success */
+					&progress);	/* value */
 	if (r < 0) {
 		fprintf(stderr, "Failed to get progress: %s\n", error.message);
 		goto finish;
@@ -70,7 +71,8 @@ int get_progress(void)
 	if (current_progress < progress)
 		current_progress = progress;
 
-	len = snprintf(buffer, 20, "PROGRESS %d", (int)(current_progress * 100));
+	len =
+	    snprintf(buffer, 20, "PROGRESS %d", (int)(current_progress * 100));
 	write(pipe_fd, buffer, len + 1);
 
 	if (progress == 1.0) {
@@ -86,9 +88,7 @@ finish:
 	return r;
 }
 
-int psplash_handler(sd_event_source *s,
-			uint64_t usec,
-			void *userdata)
+int psplash_handler(sd_event_source * s, uint64_t usec, void *userdata)
 {
 	sd_event *event = userdata;
 	int r;
@@ -125,7 +125,7 @@ int main()
 
 	chdir(rundir);
 
-	if ((pipe_fd = open (PSPLASH_FIFO,O_WRONLY|O_NONBLOCK)) == -1) {
+	if ((pipe_fd = open(PSPLASH_FIFO, O_WRONLY | O_NONBLOCK)) == -1) {
 		fprintf(stderr, "Error unable to open fifo");
 		exit(EXIT_FAILURE);
 	}
@@ -135,8 +135,7 @@ int main()
 		goto finish;
 
 	if (sigemptyset(&ss) < 0 ||
-	    sigaddset(&ss, SIGTERM) < 0 ||
-	    sigaddset(&ss, SIGINT) < 0) {
+	    sigaddset(&ss, SIGTERM) < 0 || sigaddset(&ss, SIGINT) < 0) {
 		r = -errno;
 		goto finish;
 	}

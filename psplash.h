@@ -35,9 +35,9 @@
 #include <termios.h>
 #include <unistd.h>
 
-typedef uint8_t  uint8;
+typedef uint8_t uint8;
 typedef uint16_t uint16;
-typedef int            bool;
+typedef int bool;
 
 #ifndef FALSE
 #define FALSE 0
@@ -62,22 +62,19 @@ typedef int            bool;
 #endif
 
 #ifdef __GNUC__
-#  define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
+#define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
 #else
-#  define UNUSED(x) UNUSED_ ## x
+#define UNUSED(x) UNUSED_ ## x
 #endif
 
-typedef struct PSplashFont
-{
-    char *name;				/* Font name. */
-    int   height;			/* Height in pixels. */
-    int   index_mask;			/* ((1 << N) - 1). */
-    int  *offset;			/* (1 << N) offsets into index. */
-    int  *index;
-    u_int32_t *content;
-}
-PSplashFont;
-
+typedef struct PSplashFont {
+	char *name;		/* Font name. */
+	int height;		/* Height in pixels. */
+	int index_mask;		/* ((1 << N) - 1). */
+	int *offset;		/* (1 << N) offsets into index. */
+	int *index;
+	u_int32_t *content;
+} PSplashFont;
 
 #include "psplash-fb.h"
 #include "psplash-console.h"
